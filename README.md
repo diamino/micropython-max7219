@@ -106,13 +106,13 @@ X8 MOSI | DIN
 X5 CS   | CS
 X6 SCK  | CLK
 
-Wemos D1 Mini    | max7219 8x8 LED Matrix
----------------- | ----------------------
-5V               | VCC
-GND              | GND
-D7 MOSI (GPIO13) | DIN
-D8 CS (GPIO15)   | CS
-D5 SCK (GPIO14)  | CLK
+Wemos D1 Mini or NodeMCU | max7219 8x8 LED Matrix
+----------------         | ----------------------
+5V / 3V3                 | VCC
+GND                      | GND
+D7 MOSI (GPIO13)         | DIN
+D8 CS (GPIO15)           | CS
+D5 SCK (GPIO14)          | CLK
 
 ESP32            | max7219 8x8 LED Matrix
 ---------------- | ----------------------
