@@ -37,7 +37,7 @@ _DISPLAYTEST = const(15)
 
 _FBEXT = const(2)
 
-class Matrix8x8:
+class Matrix8x8(framebuf.FrameBuffer):
     def __init__(self, spi, cs, num, extended=False):
         """
         Driver for cascading MAX7219 8x8 LED matrices.
@@ -59,21 +59,7 @@ class Matrix8x8:
             self.extendedsize = 0
         self.buffer = bytearray(8 * (num + self.extendedsize))
         self.num = num
-        fb = framebuf.FrameBuffer(self.buffer, 8 * (num + self.extendedsize), 8, framebuf.MONO_HLSB)
-        self.framebuf = fb
-        # Provide methods for accessing FrameBuffer graphics primitives. This is a workround
-        # because inheritance from a native class is currently unsupported.
-        # http://docs.micropython.org/en/latest/pyboard/library/framebuf.html
-        self.fill = fb.fill  # (col)
-        self.pixel = fb.pixel # (x, y[, c])
-        self.hline = fb.hline  # (x, y, w, col)
-        self.vline = fb.vline  # (x, y, h, col)
-        self.line = fb.line  # (x1, y1, x2, y2, col)
-        self.rect = fb.rect  # (x, y, w, h, col)
-        self.fill_rect = fb.fill_rect  # (x, y, w, h, col)
-        self.text = fb.text  # (string, x, y, col=1)
-        self.scroll = fb.scroll  # (dx, dy)
-        self.blit = fb.blit  # (fbuf, x, y[, key])
+        super().__init__(self.buffer, 8 * (num + self.extendedsize), 8, framebuf.MONO_HLSB)
         self.init()
 
     def _write(self, command, data):
