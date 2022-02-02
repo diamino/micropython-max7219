@@ -35,8 +35,10 @@ _SCANLIMIT = const(11)
 _SHUTDOWN = const(12)
 _DISPLAYTEST = const(15)
 
+_FBEXT = const(2)
+
 class Matrix8x8:
-    def __init__(self, spi, cs, num):
+    def __init__(self, spi, cs, num, extended=False):
         """
         Driver for cascading MAX7219 8x8 LED matrices.
 
@@ -51,9 +53,13 @@ class Matrix8x8:
         self.spi = spi
         self.cs = cs
         self.cs.init(cs.OUT, True)
-        self.buffer = bytearray(8 * num)
+        if extended:
+            self.extendedsize = _FBEXT
+        else:
+            self.extendedsize = 0
+        self.buffer = bytearray(8 * (num + self.extendedsize))
         self.num = num
-        fb = framebuf.FrameBuffer(self.buffer, 8 * num, 8, framebuf.MONO_HLSB)
+        fb = framebuf.FrameBuffer(self.buffer, 8 * (num + self.extendedsize), 8, framebuf.MONO_HLSB)
         self.framebuf = fb
         # Provide methods for accessing FrameBuffer graphics primitives. This is a workround
         # because inheritance from a native class is currently unsupported.
@@ -95,5 +101,5 @@ class Matrix8x8:
         for y in range(8):
             self.cs(0)
             for m in range(self.num):
-                self.spi.write(bytearray([_DIGIT0 + y, self.buffer[(y * self.num) + m]]))
+                self.spi.write(bytearray([_DIGIT0 + y, self.buffer[(y * (self.num + self.extendedsize)) + m + int(self.extendedsize / 2)]]))
             self.cs(1)
